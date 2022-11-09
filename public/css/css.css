@@ -376,3 +376,63 @@ html{
   position: relative;
   left: 25%;
 }
+.topConteiner {
+  position: relative;
+  width: 100%;
+  height: 15%;
+  top: 0;
+  left: 0;
+  background-color: rgb(34, 2, 48);
+}
+#btn7 {
+  width: 160px;
+  padding: 5px;
+  margin-right: 15px;
+  margin-top: 25px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  text-align: center;
+  float: right;
+  background-color: rgb(255, 255, 188);
+  color: rgb(5, 2, 17);
+  border: 2px solid white;
+  
+}
+#img9 {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-top: 10px;
+  margin-left: 40px;
+}
+#names {
+  position: absolute;
+  color: white;
+  margin-left: 130px;
+  top: 30px;
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+
+}
+#wallpaper {
+  width: 300px;
+  height: 400px;
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-35%);
+
+}
+#titulo {
+  color: white;
+  margin-top: 5%;
+  margin-left: 60px;
+  font-size: 36px;
+  font-family: Arial, Helvetica, sans-serif;
+} 
+#msg {
+  color: rgb(219, 219, 219);
+  text-align: left;  
+  margin-left: 60px;
+  margin-top: 20px;
+  font-size: 20px;
+  font-family: Arial, Helvetica, sans-serif;
