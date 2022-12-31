@@ -9,13 +9,14 @@
 </head>
 <body> 
 <div class="htmls"></div>
-    <img class="img2" src="/Imagens/planeta.jpg"></img>
+    <img class="img2" src="/Imagens/planeta.jpg">
         @if (session('status'))
                             {{ session('status') }}
           @endif
 <div class="topnav">
     <a href="/conteudos">Conteudo</a>
     <a href="/noticias" >Noticia</a>
+    <a href="/email" >Fale conosco</a>
 </div>
 
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

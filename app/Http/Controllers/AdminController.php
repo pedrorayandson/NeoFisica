@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use App\Models\Publicacao;
 use App\Models\Tipo_das_pub;
 use App\Models\User;
+use App\Notifications\NewPubNotification;
+use App\Notifications\UpdatedPubNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
 {//
@@ -43,7 +46,7 @@ class AdminController extends Controller
             $pubTipo += $tipo->tip_id;
         }
 
-        Publicacao::create([
+        $publicacao = Publicacao::create([
             'pub_titulo' => $titulo,
             'pub_texto' => $texto,
             'pub_img' => $imageName, 
@@ -59,6 +62,8 @@ class AdminController extends Controller
         fwrite($file, $text_html);
         echo "<script>alert('$tip foi cadastrado com sucesso')</script>";
         fclose($file);
+
+        Auth::user()->notify(new NewPubNotification($publicacao));
 
         return redirect("/publicar");
     }
@@ -124,7 +129,16 @@ class AdminController extends Controller
                 'pub_texto' => $request->texto,
             ];
         }
+        $p = Publicacao::where('pub_id', $id)->first();
+        $oldTit = str_replace(" ", "_", $p->pub_titulo);
+        $newTit = str_replace(" ", "_", $request->titulo);
+        rename(resource_path("views/paginas/$oldTit.blade.php"), resource_path("views/paginas/$newTit.blade.php"));
         Publicacao::where('pub_id', $id)->update($data);
+        
+        $publicacao = new Publicacao;
+        $publicacao->pub_titulo = $request->titulo;
+        
+        Auth::user()->notify (new UpdatedPubNotification($publicacao));
 
         return redirect('/listagem');
     }

@@ -40,3 +40,6 @@ Route::get('/{id}/edit', [AdminController::class, 'edit'])->where('id', '[0-9]+'
 
 Route::put('/{id}/update', [AdminController::class, 'update'])->name('update');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/email', [UserController::class, 'indexEmail']);
+Route::post('/email', [UserController::class, 'postEmail']);

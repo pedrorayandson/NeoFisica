@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SupportMail;
 use App\Models\Publicacao;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -38,5 +41,24 @@ class UserController extends Controller
         return view('paginas.'.$titulo, [
             'pubs' => $pubs,
         ]);
+    }
+    public function indexEmail(){
+        return view('email');
+    }
+
+    public function postEmail(Request $request){ 
+     
+        $request->validate([
+        'name' => 'required',
+        'mensagem' => 'required',
+        ]);
+        $data = [
+            'name' => $request->name,
+            'mensagem' => $request->mensagem,
+            'user' => Auth::user(),
+        ];
+        
+        Mail::to('p.rayandson@escolar.ifrn.edu.br')->send(new SupportMail($data));
+        return view('home');
     }
 }
