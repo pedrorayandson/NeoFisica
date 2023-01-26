@@ -12,7 +12,7 @@
         <div class="up"> 
             <button id="btn1" onclick="window.location.href ='www.instagram.com'">Instagram</button>
             <button id="btn1" onclick="window.location.href ='www.facebook.com'">Facebook</button>
-            <img id="img" src="imagens/imgLogo.jpeg">  
+            <img id="img" src="Imagens/imgLogo.jpeg">  
             <button id="btn2" onclick="window.location.href = '/register'">Cadastro</button>
         </div>
     </header>

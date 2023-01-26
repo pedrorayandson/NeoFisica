@@ -1,30 +1,23 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Publicacao;
-use App\Models\Tipo_das_pub;
-use App\Models\User;
 use App\Notifications\NewPubNotification;
 use App\Notifications\UpdatedPubNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 
-class AdminController extends Controller
-{//
-    public function indexPublish(Request $request)
+class PublicationController extends Controller
+{
+    public function index(Request $request)
     {
-        // if($request->session()->has('administradores')){
          return view('publicar');
-    //     }else{
-    //         echo "<script>alert('Você não tem permissão para acessar essa página')</script>";
-    //      return view('welcome');
-    //    }
     }
-    public function storePublish(Request $request)
+
+    public function store(Request $request)
     {
         $titulo = $request->post('titulo');
         $texto = $request->post('texto');
@@ -53,9 +46,15 @@ class AdminController extends Controller
             'pub_tip_id' => $pubTipo,
         ]);
 
-        $file = fopen(resource_path("views/paginas/" . str_replace(" ", "_", $titulo).".blade.php"), 'w');
+        $pub = DB::table('publicacaos')->where('pub_img', '=', str($imageName), 'and', 'pub_titulo', '=', $titulo)->first();
 
-        $text_html = "<?php App\Models\View::insertView($"."pubs->pub_titulo) ?>"; 
+        try {
+            $file = fopen(resource_path("views/paginas/" . $pub->pub_id. str_replace(" ", "_", $titulo).".blade.php"), 'w');
+        } catch (\Throwable $th) {
+            die("<h1>Não foi possível cadastrar a publicação:</h1><br><h2>".$th->getMessage()."</h2>");
+        }
+
+        $text_html = "<?php App\Models\View::insertView($pub->pub_id) ?>"; 
         $text_html .= "<html style='background-color:rgba(8, 8, 86, 0.855);'><head><title>{{"."$"."pubs->pub_titulo}}</title><link href= '/css/css.css'></head><body><h1 style='position:absolute; top:20%; left:10%;'>{{"."$"."pubs->pub_titulo}}</h1><br>";
         $text_html .= "<img style='position: absolute; left: 44.5%; top: -23.5%; width: 6.5%; border-radius: 80%; margin-top: 12%;' src='/Imagens/planeta.jpg'></img><img style='position: absolute; top: 30%; left:10%;width: 200px;' class='imagen_not' src='/Imagens/{{"."$"."pubs->pub_img}}'><br><p style='position: absolute; right: 5%; top: 30%; width: 45%;' class = 'texto'>{{"."$"."pubs->pub_texto}}</p>";
         $text_html .= "</body></html>";
@@ -68,26 +67,6 @@ class AdminController extends Controller
         return redirect("/publicar");
     }
 
-    public function indexCadAdmin(Request $request)
-    {
-        // if ($request->session()->has('administradors')) {
-            return view('auth.registerAdmin');
-        // }else{
-        //     echo "<script>alert('Você não tem permissão para acessar essa página')</script>";
-        //     return view('welcome');
-        // }
-    }
-    public function listagem()
-    { 
-        $views = DB::table("views")->join("users", "users.id", "=", "views.views_us_id")->join("publicacaos", "views.views_pub_id", "=", "publicacaos.pub_id")->get();
-        $users = User::all();
-        $pubs = DB::table("publicacaos")->join("tipos_das_pubs", "tipos_das_pubs.tip_id", "=", "pub_tip_id")->get();
-        return view("listagem", [
-            'views' => $views,
-            'users' => $users,
-            'pubs' =>$pubs,
-        ]);
-    }
     public function edit($id)
     {
         $pubs = Publicacao::where('pub_id', $id)->first();
@@ -132,7 +111,8 @@ class AdminController extends Controller
         $p = Publicacao::where('pub_id', $id)->first();
         $oldTit = str_replace(" ", "_", $p->pub_titulo);
         $newTit = str_replace(" ", "_", $request->titulo);
-        rename(resource_path("views/paginas/$oldTit.blade.php"), resource_path("views/paginas/$newTit.blade.php"));
+
+        rename(resource_path("views/paginas/".$id.$oldTit.".blade.php"), resource_path("views/paginas/".$id.$newTit.".blade.php"));
         Publicacao::where('pub_id', $id)->update($data);
         
         $publicacao = new Publicacao;
@@ -142,4 +122,29 @@ class AdminController extends Controller
 
         return redirect('/listagem');
     }
+
+    public function indexNews(){
+        $nots = DB::table("publicacaos")->join("tipos_das_pubs", "tipos_das_pubs.tip_id", "=", "publicacaos.pub_tip_id")->where("tip_tipo", "=", "noticia")->latest('publicacaos.created_at')->get();
+        return view('noticias', [
+            'nots' => $nots,
+        ]);
+    }
+    public function indexCont()
+    {
+        $conts = DB::table("publicacaos")->join("tipos_das_pubs", "tipos_das_pubs.tip_id", "=", "publicacaos.pub_tip_id")->where("tip_tipo", "=", "conteudo")->latest('publicacaos.created_at')->get();
+
+        return view('conteudos', [
+            'conts' => $conts,
+        ]);
+    }
+
+    public function redirectPage($id, $titulo)
+    {
+        $pubs = Publicacao::where('pub_titulo', str_replace("_", " ", $titulo))->first();
+ 
+        return view('paginas.'.$id.$titulo, [
+            'pubs' => $pubs,
+        ]);
+    }
+
 }

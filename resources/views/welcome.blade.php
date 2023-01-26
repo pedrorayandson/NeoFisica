@@ -14,7 +14,13 @@
         <div class="topConteiner">
             <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                 @auth
+                @if ('is_admin')
+                <a href="{{ url('/admin/home') }}"style="text-decoration: none;" id="btn7">Home</a>
+
+                @else
                 <a href="{{ url('/home') }}"style="text-decoration: none;" id="btn7">Home</a>
+                @endif
+                
                     @else
                     <a href="{{ route('login') }}" style="text-decoration: none;" id="btn7">login</a>
                         @if (Route::has('register'))
