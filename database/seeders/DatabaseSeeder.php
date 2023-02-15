@@ -22,14 +22,12 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@admin',
             'is_admin' => 1,
-            'data'=>'2022-09-09',
             'password' => Hash::make('123123123')
         ]);
         \App\Models\User::factory()->create([
             'name'=>'User',
             'email'=>'user@user.com',
             'is_admin'=>0,
-            'data'=> '2019-05-09',
             'password'=> bcrypt('123456'),
         ]);
 

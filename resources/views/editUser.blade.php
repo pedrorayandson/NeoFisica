@@ -14,41 +14,32 @@
         <div class="up">
             <button id="btn1" onclick="window.location.href ='www.instagram.com'">Instagram</button>
             <button id="btn1" onclick="window.location.href ='www.facebook.com'">Facebook</button>
-            <img id="img" src="Imagens/imgLogo.jpeg">  
+            <img id="img" src="/Imagens/imgLogo.jpeg">  
             <button id="btn2" onclick = "window.location.href ='/login'">Login</button>
         </div>
 </header>
 <div class="cad">
-    <form method="POST" action="{{ route('register') }}">
+    <form action="{{ url('/user/update', ['id' => $user->id]) }}" enctype="multipart/form-data" method="POST">
         @csrf
+        @method('PUT')
                     
-        <input id="name" type="text" placeholder="Digite seu Nome" class=" btn-btn" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+        <input id="name" type="text" placeholder="Digite seu Nome" class=" btn-btn" name="name" value="{{ $user->name }}" required autocomplete="name" autofocus>
 
         @error('name')
             <span class="invalid-feedback" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
         @enderror
-        <input id="email" placeholder="Digite seu Email" type="email" class=" btn-btn" name="email" value="{{ old('email') }}" required autocomplete="email">
+        <input id="email" placeholder="Digite seu Email" type="email" class=" btn-btn" name="email" value="{{ $user->email }}" >
 
             @error('email')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror
-        <input id="password" placeholder="Confirmar senha" type="password" class=" btn-btn" name="password" required autocomplete="new-password">
+        <input id="password" type="file" class=" btn-btn" name="avatar">                       
 
-            @error('password')
-                <span class="invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-            @enderror                          
-
-        <input id="password-confirm" placeholder="Confirmar Senha" type="password" class=" btn-btn" name="password_confirmation" required autocomplete="new-password">
-
-        <button type="submit" id="btnspe">
-            {{ __('Register') }}
-        </button>
+        <button type="submit" id="btnspe">Editar</button>
     </form>
 </div>
 </body>

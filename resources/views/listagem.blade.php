@@ -22,7 +22,7 @@
     <div id = "pubs_table">
         <table class="listagem1" border= 1><tr><td>ID</td><td>Título</td><td>Escrito por</td><td>Tipo</td><td>...</td></tr>
         @foreach ($pubs as $pub)
-            <tr><td>{{$pub->pub_id}}</td><td>{{$pub->pub_titulo}}</td><td>{{$pub->tip_tipo}}</td><td><a href="/{{$pub->pub_id}}/edit"><i class="fa-solid fa-pen-to-square"></i></a></td></tr>
+            <tr><td>{{$pub->pub_id}}</td><td>{{$pub->pub_titulo}}</td><td>{{$pub->tip_tipo}}</td><td><a href="publicacao/{{$pub->pub_id}}/edit"><i class="fa-solid fa-pen-to-square"></i></a></td></tr>
         @endforeach
         </table>
     </div> 

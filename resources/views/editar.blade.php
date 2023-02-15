@@ -12,13 +12,13 @@
         <div class="up"> 
             <button id="btn1" onclick="window.location.href ='www.instagram.com'">Instagram</button>
             <button id="btn1" onclick="window.location.href ='www.facebook.com'">Facebook</button>
-            <img id="img" src="../imagens/imgLogo.jpeg">
+            <img id="img" src="/Imagens/imgLogo.jpeg">
             <button id="btn2" onclick="window.location.href = '/register'">Cadastro</button>
         </div>
     </header>
     <div id="add">
     <h1 class="h5">Editar Publicação</h1>
-    <form action="{{route('update', ['id' => $pubs->pub_id])}}" method="post" enctype="multipart/form-data">
+    <form action="{{route('update_pub', ['id' => $pubs->pub_id])}}" method="post" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <input type="text" class="btn-btn-btn" name="titulo" value="{{$pubs->pub_titulo}}" placeholder="editar título">

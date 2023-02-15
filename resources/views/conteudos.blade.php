@@ -12,9 +12,9 @@
     <div class="conteudos">
         @foreach ($conts as $cont)
         <div class="imagens">
-            <a style="text-decoration: none; color: red;" href="/publicacoes/{{str_replace(" ", "_", $cont->pub_titulo)}}">
+            <a style="text-decoration: none; color: red;" href="/publicacoes/{{$cont->pub_id}}/{{str_replace(" ", "_", $cont->pub_titulo)}}">
                 <h1 class="h1">{{$cont->pub_titulo}}</h1>
-                <img class="img3" src="/Imagens/{{$cont->pub_img}}" alt="">
+                <img class="img3" src="{{ asset($cont->pub_img) }}" alt="">
             </a>
         </div>
         @endforeach

@@ -8,13 +8,13 @@
     <title>Notícias</title>
 </head>
 <body>
-    <img class="img2" src="/Imagens/planeta.jpg"></img>
+    <img class="img2" src="/Imagens/planeta.jpg">
     <div class="noticias2">
         @foreach ($nots as $not)
         <div class="imagens">
-        <a href="/publicacoes/{{str_replace(" ", "_", $not->pub_titulo)}}">
+        <a href="/publicacoes/{{$not->pub_id}}/{{str_replace(" ", "_", $not->pub_titulo)}}">
             <h1 class="h1">{{$not->pub_titulo}}</h1>
-            <img class="img3" src="/Imagens/{{$not->pub_img}}" alt="">
+            <img class="img3" src="{{ asset($not->pub_img) }}" alt="">
         </a>
         </div>
         @endforeach

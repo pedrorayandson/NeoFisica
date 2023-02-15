@@ -19,19 +19,21 @@ class PublicationController extends Controller
 
     public function store(Request $request)
     {
+
+        $request->validate([
+            'titulo' => 'required|max:100',
+            'texto' => 'required',
+            'image' => 'required',
+        ]);
+
         $titulo = $request->post('titulo');
         $texto = $request->post('texto');
         $tip = $request->post('tipo');
- 
-        if($request->hasFile('image') && $request->file('image')->isValid()){
-            
-            $requestImage = $request->image;
-            $extension = $requestImage->extension();
-            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")). "." . $extension;
 
-            $requestImage->move(public_path('/Imagens'), $imageName);
+        $extension = $request->file('image')->getClientOriginalExtension();
+        $filename = md5($request->file('image')->getClientOriginalName() . strtotime("now")). "." . $extension;
+        $file = $request->file('image')->storeAs('imagens', $filename);
 
-        }
         
         $tipos = DB::table('tipos_das_pubs')->where('tip_tipo', '=', $tip)->get('tip_id');
         $pubTipo = 0;
@@ -42,21 +44,21 @@ class PublicationController extends Controller
         $publicacao = Publicacao::create([
             'pub_titulo' => $titulo,
             'pub_texto' => $texto,
-            'pub_img' => $imageName, 
+            'pub_img' => $file, 
             'pub_tip_id' => $pubTipo,
         ]);
 
-        $pub = DB::table('publicacaos')->where('pub_img', '=', str($imageName), 'and', 'pub_titulo', '=', $titulo)->first();
+        $pub = DB::table('publicacaos')->where('pub_img', '=', $file, 'and', 'pub_titulo', '=', $titulo)->first();
 
-        try {
+        //try {
             $file = fopen(resource_path("views/paginas/" . $pub->pub_id. str_replace(" ", "_", $titulo).".blade.php"), 'w');
-        } catch (\Throwable $th) {
+        /* } catch (\Throwable $th) {
             die("<h1>Não foi possível cadastrar a publicação:</h1><br><h2>".$th->getMessage()."</h2>");
-        }
+        } */
 
-        $text_html = "<?php App\Models\View::insertView($pub->pub_id) ?>"; 
+        $text_html = "<?php App\Models\View::insertView('$pub->pub_titulo') ?>"; 
         $text_html .= "<html style='background-color:rgba(8, 8, 86, 0.855);'><head><title>{{"."$"."pubs->pub_titulo}}</title><link href= '/css/css.css'></head><body><h1 style='position:absolute; top:20%; left:10%;'>{{"."$"."pubs->pub_titulo}}</h1><br>";
-        $text_html .= "<img style='position: absolute; left: 44.5%; top: -23.5%; width: 6.5%; border-radius: 80%; margin-top: 12%;' src='/Imagens/planeta.jpg'></img><img style='position: absolute; top: 30%; left:10%;width: 200px;' class='imagen_not' src='/Imagens/{{"."$"."pubs->pub_img}}'><br><p style='position: absolute; right: 5%; top: 30%; width: 45%;' class = 'texto'>{{"."$"."pubs->pub_texto}}</p>";
+        $text_html .= "<img style='position: absolute; left: 44.5%; top: -23.5%; width: 6.5%; border-radius: 80%; margin-top: 12%;' src='/Imagens/planeta.jpg'></img><img style='position: absolute; top: 30%; left:10%;width: 200px;' class='imagen_not' src='{{asset('/imagens/$filename')}}'><br><p style='position: absolute; right: 5%; top: 30%; width: 45%;' class = 'texto'>{{"."$"."pubs->pub_texto}}</p>";
         $text_html .= "</body></html>";
         fwrite($file, $text_html);
         echo "<script>alert('$tip foi cadastrado com sucesso')</script>";
@@ -141,6 +143,7 @@ class PublicationController extends Controller
     public function redirectPage($id, $titulo)
     {
         $pubs = Publicacao::where('pub_titulo', str_replace("_", " ", $titulo))->first();
+    
  
         return view('paginas.'.$id.$titulo, [
             'pubs' => $pubs,

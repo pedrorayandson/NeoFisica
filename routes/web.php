@@ -26,7 +26,7 @@ Route::get('/publicar', [PublicationController::class, 'index'])->middleware('is
 
 Route::post('/publicar', [PublicationController::class, 'store'])->name('publicar');
 
-Route::get('/listagem', [UserController::class, 'listagem'])->middleware('is_admin');
+Route::get('/listagem', [UserController::class, 'show'])->middleware('is_admin');
 
 Route::get('/noticias', [PublicationController::class, 'indexNews']);
 
@@ -34,9 +34,13 @@ Route::get('/conteudos', [PublicationController::class, 'indexCont']);
 
 Route::get('/publicacoes/{id}/{titulo}', [PublicationController::class, 'redirectPage']);
 
-Route::get('/{id}/edit', [PublicationController::class, 'edit'])->where('id', '[0-9]+')->middleware('is_admin')->name('editar');
+Route::get('publicacao/{id}/edit', [PublicationController::class, 'edit'])->where('id', '[0-9]+')->middleware('is_admin')->name('editar');
 
-Route::put('/{id}/update', [PublicationController::class, 'update'])->middleware('is_admin')->name('update');
+Route::put('publicacao/{id}/update', [PublicationController::class, 'update'])->middleware('is_admin')->name('update_pub');
+
+Route::get('/user/edit/{id}', [UserController::class, 'edit'])->where('id', '[0-9]+');
+
+Route::put('user/update/{id}', [UserController::class, 'update'])->name('update_user');
 
 Route::get('/home', [UserController::class, 'index'])->name('home');
 

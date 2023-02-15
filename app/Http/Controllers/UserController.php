@@ -40,7 +40,7 @@ class UserController extends Controller
     {
             return view('auth.registerAdmin');
     }
-    public function listagem()
+    public function show()
     { 
         $views = DB::table("views")->join("users", "users.id", "=", "views.views_us_id")->join("publicacaos", "views.views_pub_id", "=", "publicacaos.pub_id")->get();
         $users = User::all();
@@ -55,5 +55,49 @@ class UserController extends Controller
     public function indexAdmin()
     {
         return view('adminHome');
+    }
+
+    public function edit($id)
+    {
+        $user = User::find($id);
+
+        $this->authorize("update", $user);
+
+        return view("editUser", [
+            'user' => $user,
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        
+        $user = User::find($id);
+        if ($request->file('avatar') != null) {
+        $extension = $request->file('avatar')->getClientOriginalExtension();
+        $filename = 'avatar'.$user->id.'.'.$extension;
+        $file = $request->file('avatar')->storeAs('avatars', $filename);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'avatar' => $file,
+        ]);
+
+        $user->avatar = $file;
+        }else{
+            $user->update([
+                'name' => $request->name,
+                'email' => $request->email,
+            ]);
+        }
+        $user->save();
+
+        if ($user->is_admin) {
+            return view('adminHome');
+        } else {
+            return view('home');
+        }
+        
+        
     }
 }
