@@ -8,17 +8,26 @@ use App\Notifications\UpdatedPubNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
-class PublicationController extends Controller
+class PublicacaoController extends Controller
 {
-    public function index(Request $request)
+    public function __construct() {
+        $this->middleware('auth.check');
+    }
+
+    public function create()
     {
-         return view('publicar');
+        $this->authorize('publicar', Auth::user());
+
+        return view('publicar');
     }
 
     public function store(Request $request)
     {
+
+        $this->authorize('store-pub', Auth::user());
 
         $request->validate([
             'titulo' => 'required|max:100',
@@ -71,6 +80,8 @@ class PublicationController extends Controller
 
     public function edit($id)
     {
+        $this->authorize('edit-pub', Auth::user());
+
         $pubs = Publicacao::where('pub_id', $id)->first();
 
         if(!empty($pubs)){
@@ -85,6 +96,8 @@ class PublicationController extends Controller
     }
 
     public function update(Request $request, $id){
+        $this->authorize('update-pub', Auth::user());
+
         $data = null;
         if($request->hasFile('image') && $request->file('image')->isValid()){
 
@@ -149,5 +162,4 @@ class PublicationController extends Controller
             'pubs' => $pubs,
         ]);
     }
-
 }

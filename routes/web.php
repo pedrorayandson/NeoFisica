@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\PublicacaoController;
 use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
@@ -22,21 +22,21 @@ Route::get('/admin/home', [UserController::class, 'indexAdmin'])->middleware(['i
 
 Auth::routes();
 
-Route::get('/publicar', [PublicationController::class, 'index'])->middleware('is_admin');
+Route::get('/publicar', [PublicacaoController::class, 'create']);
 
-Route::post('/publicar', [PublicationController::class, 'store'])->name('publicar');
+Route::post('/publicar', [PublicacaoController::class, 'store'])->name('publicar');
 
-Route::get('/listagem', [UserController::class, 'show'])->middleware('is_admin');
+Route::get('/listagem', [UserController::class, 'show']);
 
-Route::get('/noticias', [PublicationController::class, 'indexNews']);
+Route::get('/noticias', [PublicacaoController::class, 'indexNews']);
 
-Route::get('/conteudos', [PublicationController::class, 'indexCont']);
+Route::get('/conteudos', [PublicacaoController::class, 'indexCont']);
 
-Route::get('/publicacoes/{id}/{titulo}', [PublicationController::class, 'redirectPage']);
+Route::get('/publicacoes/{id}/{titulo}', [PublicacaoController::class, 'redirectPage']);
 
-Route::get('publicacao/{id}/edit', [PublicationController::class, 'edit'])->where('id', '[0-9]+')->middleware('is_admin')->name('editar');
+Route::get('publicacao/{id}/edit', [PublicacaoController::class, 'edit'])->where('id', '[0-9]+')->middleware('is_admin')->name('editar');
 
-Route::put('publicacao/{id}/update', [PublicationController::class, 'update'])->middleware('is_admin')->name('update_pub');
+Route::put('publicacao/{id}/update', [PublicacaoController::class, 'update'])->middleware('is_admin')->name('update_pub');
 
 Route::get('/user/edit/{id}', [UserController::class, 'edit'])->where('id', '[0-9]+');
 

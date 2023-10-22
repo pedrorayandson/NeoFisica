@@ -11,7 +11,7 @@
 <body> 
 <div class="htmls"></div>
     @if (Auth::user()->avatar == null)
-    <img src="{{asset('avatars/avatar.png')}}" class="avatar">
+    <img src="{{asset('avatars/avatar.jpg')}}" class="avatar">
     @else
     <img src="{{asset(Auth::user()->avatar)}}" class="avatar">
     @endif

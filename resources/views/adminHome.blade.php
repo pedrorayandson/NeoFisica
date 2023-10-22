@@ -10,7 +10,7 @@
 <body>
     <div class="html"></div>
     @if (Auth::user()->avatar == null)
-        <button onclick="window.location.href = '/user/edit/{{Auth::user()->id}}'"><img src="{{asset('avatars/avatar.png')}}" class="avatar"></button> 
+        <button onclick="window.location.href = '/user/edit/{{Auth::user()->id}}'"><img src="{{asset("avatars/avatar.jpg")}}" class="avatar"></button> 
     @else
     <button onclick="window.location.href = '/user/edit/{{Auth::user()->id}}'" class = "editar_avatar" title="editar">
         <img src="{{asset(Auth::user()->avatar)}}" class="avatar">

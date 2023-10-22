@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
+use App\Policies\PublicacaoPolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -14,6 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
          'App\Models\User' => 'App\Policies\UserPolicy',
+         'App\Models\Publicacao' => 'App\Policies\PublicacaoPolicy',
     ];
 
     /**
@@ -24,6 +26,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
-        
+
+        Gate::define('publicar', [PublicacaoPolicy::class, 'create']);
+        Gate::define('store-pub', [PublicacaoPolicy::class, 'store']);
+        Gate::define('edit-pub', [PublicacaoPolicy::class, 'edit']);
+        Gate::define('update-pub', [PublicacaoPolicy::class, 'update']);
     }
 }

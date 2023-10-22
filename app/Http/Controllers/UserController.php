@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth.check');
+    }
+
     public function index()
     {
        return view('home');
@@ -38,13 +42,18 @@ class UserController extends Controller
 
     public function indexCadAdmin(Request $request)
     {
-            return view('auth.registerAdmin');
+        $this->authorize('createAdmin', Auth::user());
+
+        return view('auth.registerAdmin');
     }
     public function show()
-    { 
+    {
+        $this->authorize('viewAny', Auth::user());
+        
         $views = DB::table("views")->join("users", "users.id", "=", "views.views_us_id")->join("publicacaos", "views.views_pub_id", "=", "publicacaos.pub_id")->get();
         $users = User::all();
         $pubs = DB::table("publicacaos")->join("tipos_das_pubs", "tipos_das_pubs.tip_id", "=", "pub_tip_id")->get();
+
         return view("listagem", [
             'views' => $views,
             'users' => $users,
@@ -61,7 +70,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
 
-        $this->authorize("update", $user);
+        $this->authorize("edit", $user);
 
         return view("editUser", [
             'user' => $user,
@@ -70,7 +79,8 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        
+        $this->authorize('update', Auth::user());
+
         $user = User::find($id);
         if ($request->file('avatar') != null) {
         $extension = $request->file('avatar')->getClientOriginalExtension();
